@@ -84,50 +84,105 @@ class Excercises {
         public:
 
         static int countByShape(vector<Shape*> v, string shape_name) {
-            
             //YOUR CODE HERE
-            
-            return -1; //Dummy return
-
+            int total = 0;
+            for(int i = 0; i < v.size(); i++) {
+                if(v[i]->getShapeType() == shape_name) total++;
+            }
+            return total;
         }
 
-        /*Returns the biggest area of a given vector of shapes*/
+        /*Returns the biggest area of a given vector of shapes
+        */
         static double largestArea(vector<Shape*> v) {
             //YOUR CODE HERE
-            
-            return -1.0; //Dummy return
+
+            if(v.empty()) return -1;
+
+            double largestArea = v[0]->getArea();
+
+            for(Shape* s: v) {
+                if(s->getArea() > largestArea) {
+                    largestArea = s->getArea();
+                }
+            }
+
+            // for(int i = 1; i < v.size(); i++) {
+            //     if(v[i]->getArea() > largestArea) {
+            //         largestArea = v[i]->getArea();
+            //     }
+            // }
+
+            return largestArea;
         }
 
         /*Returns the average area of all the shapes in a vector*/
-        static int averageArea(vector<Shape*> v) {
+        static double averageArea(vector<Shape*> v) {
 
             //YOUR CODE HERE
-            
-            return -1; //Dummy return
+            if(v.empty()) {
+                return -1;
+            }
+
+            // [0, 1, 2, 3..., n]
+
+            double sum = 0;
+            int index = 0;
+            while(index < v.size()) {
+                sum += v[index]->getArea();
+                index++;
+            }
+
+            return sum / v.size();
+                        
+
+            // int count = 0;
+            // for(int i = 0; i < v.size(); i++) {
+            //     sum += v[i]->getArea();
+            //     count++;
+            // }
         }
 
         /*Returns wether a vector contains a duplicate of a shape. 
         A duplicate is defined by a shape having the same type and same area.*/
         static bool hasDuplicates(vector<Shape*> v) {
             //YOUR CODE HERE
-            
-            return 0; //Dummy return
+            vector<Shape*> uniques;
+
+            for(Shape* s: v) {
+                if(s->exists(uniques)) {
+                    return true;
+                } else {
+                    uniques.push_back(s);
+                }
+            }
+            return false;
         }
 
         /*Removes the first shape with the matching area, regardless of the type of shape.
-        Does nothing if the a shape with that area does not exist.*/
+        Does nothing if the shape with that area does not exist.*/
         static void removeFirst(vector<Shape*> &v, int area) {
             //YOUR CODE HERE
-
-
+            for(int i = 0; i < v.size(); i++) {
+                if(v[i]->getArea() == area) {
+                    v.erase(v.begin()+i);
+                    break;
+                }
+            }
         }
 
         /*Removes all the shapes with the matching area, regardless of the type of shape.
         Does nothing if the no shapes with that area exist.*/
         static void removeAll(vector<Shape*> &v, int area) {
             //YOUR CODE HERE
-
-
+            int index = 0;
+            while(index < v.size()) {
+                if(v[index]->getArea() == area) {
+                    v.erase(v.begin()+index);
+                } else {
+                    index++;
+                }
+            }
         }
 
         /*Returns a new vector which represents the union of 2 vectors.
@@ -137,9 +192,14 @@ class Excercises {
         static vector<Shape*> vectorUnion(vector<Shape*> v1, vector<Shape*> v2) {
 
             //YOUR CODE HERE
-            vector<Shape*> v_union;
+            vector<Shape*> v_union(v1);
 
-            return v_union; //Dummy return
+            for(Shape* s: v2) {
+                if(!s->exists(v_union)) {
+                    v_union.push_back(s);
+                }
+            }
+            return v_union;
         }
 
         /*Returns a new vector which represents the intersection of 2 vectors.
@@ -149,8 +209,12 @@ class Excercises {
         static vector<Shape*> vectorIntersection(vector<Shape*> v1, vector<Shape*> v2) {
             //YOUR CODE HERE
             vector<Shape*> v_intersection;
-
-            return v_intersection; //Dummy return
+            for(int i = 0;  i < v1.size(); i++) {
+                if(v1[i]->exists(v2)) {
+                    v_intersection.push_back(v1[i]);
+                }
+            }
+            return v_intersection;
         }
 };
 
